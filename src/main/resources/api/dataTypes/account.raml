@@ -1,0 +1,204 @@
+#%RAML 1.0 DataType
+type: object
+properties:
+  type:
+    description: 'Account type. DP = Deposits, CC = Credit Card, LN = Lending, INVMT = Brokerage, TRST1 = Trusts & Investments'
+    example: CC
+    type: string
+  sub_type:
+    description: Account sub-type. If type is CC then sub_type is ICA or SCA or PCA or JCA. If type is LN then sub_type is HELOC or MORTGAGE or LOC or LOAN. If type is INVMT or TRST1 then sub_type is REGULAR or HOLDING
+    example: ICA
+    type: string
+  id:
+    description: Account id
+    example: '80000072'
+    type: string
+  name:
+    description: Default name of the account
+    example: PERSONAL CHECKING
+    type: string
+  nick_name:
+    description: Optional name given account by the user
+    example: TEST
+    type: string
+  routing_number:
+    description: Institution and transit number
+    example: '0031234'
+    type: string
+  interest_rate:
+    description: Interest rate for DP or LN accounts in percentage
+    example: 5.43
+    type: number
+    
+  interest_earned_YTD:
+    description: Interest amount earned year-to-date in dollars
+    example: 121.34
+    type: number
+    
+  available_balance:
+    description: Available balance in dollars
+    example: 12765.92
+    type: number
+    
+  current_balance:
+    description: Current balance in dollars
+    example: 55728.83
+    type: number
+    
+  pending_balance:
+    description: Pending balance in dollars
+    example: 55728.83
+    type: number
+    
+  available_credit:
+    description: Available credit in dollars for CC or LN HELOC / LOC accounts
+    example: 1765.7
+    type: number
+    
+  credit_limit:
+    description: Credit limit in dollars for CC accounts (spending limit in dollars for SCA CC accounts)
+    example: 14000
+    type: number
+    
+  min_payment_amount:
+    description: Minimum payment amount in dollars for CC accounts
+    example: 126.54
+    type: number
+    
+  payment_due_date:
+    description: Payment due date for CC or LN accounts (yyyy-mm-dd)
+    example: '2019-04-29'
+    type: string
+  purchase_apr:
+    description: Purchases interest rate for CC accounts in percentage
+    example: 19.99
+    type: number
+    
+  cash_apr:
+    description: Cash advance interest rate for CC accounts in percentage
+    example: 21.99
+    type: number
+    
+  rewards_balance:
+    description: Rewards balance for CC accounts in points or cash
+    example: 12000
+    type: number
+    
+  card_holder_name:
+    description: Name of card holder when JCA/PCA viewing co-owner or viewing SCA card
+    example: Spouse or child name
+    type: string
+  draw_period_end_date:
+    description: Draw period end date for LN HELOC accounts (yyyy-mm-dd)
+    example: '2019-04-29'
+    type: string
+  rate_adjustment_date:
+    description: Rate adjustment date for LN Mortgage accounts (yyyy-mm-dd)
+    example: '2019-04-29'
+    type: string
+  num_payments_remaining:
+    description: Number of payments remaining on LN account
+    example: 124
+    type: integer
+    format: int64
+  last_payment_date:
+    description: Date last payment was made on LN accounts (yyyy-mm-dd)
+    example: '2019-04-29'
+    type: string
+  next_payment_amount:
+    description: Next payment amount that is due for LN accounts in dollars
+    example: 356.32
+    type: number
+    
+  outstanding_principal_balance:
+    description: Principal amount owing on LN accounts in dollars
+    example: 123621.78
+    type: number
+    
+  outstanding_interest_balance:
+    description: Interest amount owing on LN accounts in dollars
+    example: 18609.21
+    type: number
+    
+  original_balance:
+    description: Original balance on LN accounts in dollars
+    example: 250000
+    type: number
+    
+  change_in_value:
+    description: Change in dollar value since last close date of the INVMT or TRST1 account. Can be positive or negative.
+    example: -34.89
+    type: number
+    
+  change_in_percent:
+    description: Change in percentage value since last close date of the INVMT or TRST1 account. Can be positive or negative.
+    example: -2.65
+    type: number
+    
+  accrued_income:
+    description: Amount of accrued income of a non-holding INVMT or TRST1 account in dollars. Can be positive or negative.
+    example: 343.87
+    type: number
+    
+  market_value:
+    description: Market value of INVMT or TRST1 account in dollars. Includes accrued income for non-holding INVMT accounts.
+    example: 7821.54
+    type: number
+    
+  estimated_income:
+    description: Estimated dividend income in dollars (year projection) for non-holding INVMT or TRST1 account or estimated annual income in dollars for holding INVMT or TRST1 account.
+    example: 561.9
+    type: number
+    
+  total_cost_basis:
+    description: Total original value of non-holding INVMT or TRST1 account in dollars
+    example: 1281
+    type: number
+    
+  realized_gain_loss:
+    description: Actual YTD value gained or lost of non-holding INVMT or TRST1 account in dollars
+    example: 232.57
+    type: number
+    
+  unrealized_gain_loss:
+    description: Potential value gained or lost of INVMT or TRST1 account in dollars
+    example: 2212.43
+    type: number
+    
+  unrealized_gain_loss_percent:
+    description: Potential value gained or lost of INVMT or TRST1 account in percentage
+    example: 11.35
+    type: number
+    
+  security_holdings:
+    description: Security holdings value for non-holding INVMT or TRST1 account in dollars.
+    example: 937.23
+    type: number
+    
+  cash_and_equivalent:
+    description: Cash and cash equivalent value for non-holding INVMT or TRST1 account in dollars (includes funds in money market account or deposit sweep account)
+    example: 6884.31
+    type: number
+    
+  ticker_symbol:
+    description: Stock ticker symbol for holding INVMT or TRST1 account
+    example: CCNE
+    type: string
+  investment_name:
+    description: Name of investment for holding INVMT or TRST1 account
+    example: CNB Financial Corp
+    type: string
+  number_of_units:
+    description: Number of units of investment held for holding INVMT or TRST1 account
+    example: 37
+    type: integer
+    format: int32
+  investment_cost:
+    description: Original cost of investment for holding INVMT or TRST1 account
+    example: 5000
+    type: number
+    
+  asset_type:
+    description: Asset type for holding INVMT or TRST1 account
+    example: IRA
+    type: string

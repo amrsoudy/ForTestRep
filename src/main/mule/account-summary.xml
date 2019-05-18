@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+	<flow name="account-summaryFlow" doc:id="b59fe3f0-6da7-4780-a7be-80cb49599cc7">
+		<flow-ref doc:name="Get User OSC ID" doc:id="4d2e5f24-ca59-4154-bcd4-6c1d09aedfed"
+			name="get-user-OSC-idFlow" />
+		<flow-ref doc:name="Get All Accounts" doc:id="062b2ff3-5d4f-49c2-b2d7-c23d404f9ad0"
+			name="get-all-user-accountsFlow" />
+		<error-handler>
+			<on-error-continue enableNotifications="true"
+				logException="true" doc:name="On Error Continue" doc:id="6d8126fc-393d-4560-9543-a0fde8b4a585">
+				<ee:transform doc:name="Unknown exception occurred"
+					doc:id="c74333cf-fd07-4eb8-ab78-bb963d2bfb5f">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  error_code: "1000",
+  "error_message:": "Unknown exception occurred"
+}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables>
+						<ee:set-variable variableName="httpStatus"><![CDATA[500]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="get-all-user-accountsFlow" doc:id="f7160496-890b-4916-b8ad-79751adf7dc1">
+		<scatter-gather doc:name="Scatter-Gather"
+			doc:id="034bf18d-9ae7-4bab-b140-70dcb962f036">
+			<route>
+				<try doc:name="Try" doc:id="f9fa4390-c94e-4511-b373-639c0883e6a9">
+					<flow-ref doc:name="DP Accounts " doc:id="31254152-581f-4518-996a-138a4db74e4b"
+						name="DP-accounts-summary-Flow" />
+					<error-handler>
+						<on-error-continue enableNotifications="true"
+							logException="true" doc:name="On Error Continue"
+							doc:id="acfbdaab-48cf-4add-8353-678449be3378">
+							<ee:transform doc:name="[]"
+								doc:id="cfee6524-c7fc-479a-90dd-3b124009ffa9">
+								<ee:message>
+									<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+[]]]></ee:set-payload>
+								</ee:message>
+							</ee:transform>
+						</on-error-continue>
+					</error-handler>
+				</try>
+			</route>
+			<route>
+				<try doc:name="Try" doc:id="9aa438ec-0b9b-4364-bd5f-686cc825f1de">
+					<flow-ref doc:name="Credit Cards" doc:id="57c0a7bc-46f4-4f0e-80a8-f0ab9d1240fc"
+						name="credit-cards-summaryFlow" />
+					<error-handler>
+						<on-error-continue enableNotifications="true"
+							logException="true" doc:name="On Error Continue"
+							doc:id="753cb8b0-3ccb-4422-b3ba-05b5e34cc53e">
+							<ee:transform doc:name="[]"
+								doc:id="9c51cbfc-124d-48ba-89a3-618876d66325">
+								<ee:message>
+									<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+[]]]></ee:set-payload>
+								</ee:message>
+							</ee:transform>
+						</on-error-continue>
+					</error-handler>
+				</try>
+			</route>
+			<route>
+				<try doc:name="Try" doc:id="fdeccb44-0899-472a-b22e-6f180463667c">
+					<flow-ref doc:name="Lending Accounts" doc:id="f3d9438c-d125-4065-85f4-2f9da1b035f1"
+						name="lending-accouts-summaryFlow" />
+					<error-handler>
+						<on-error-continue enableNotifications="true"
+							logException="true" doc:name="On Error Continue"
+							doc:id="081bfa07-3bfb-4117-8bc0-d810ac64b46f">
+							<ee:transform doc:name="[]"
+								doc:id="9df47903-c5a8-4bc5-ba68-647d41fee4ff">
+								<ee:message>
+									<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+[]]]></ee:set-payload>
+								</ee:message>
+							</ee:transform>
+						</on-error-continue>
+					</error-handler>
+				</try>
+			</route>
+			<route>
+				<try doc:name="Try" doc:id="089d628e-86d8-48c4-a58e-facc6c3e582f">
+					<flow-ref doc:name="Brokerage Accouts" doc:id="8259cc7d-7248-42a5-bbad-2cc5345e95af"
+						name="brokerage-accouts-summaryFlow" />
+					<error-handler>
+						<on-error-continue enableNotifications="true"
+							logException="true" doc:name="On Error Continue"
+							doc:id="8b168bf4-0192-4744-a783-0b28484aabae">
+							<ee:transform doc:name="[]"
+								doc:id="6f00e759-1705-4869-acf4-38dd32fb5d04">
+								<ee:message>
+									<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+[]]]></ee:set-payload>
+								</ee:message>
+							</ee:transform>
+						</on-error-continue>
+					</error-handler>
+				</try>
+			</route>
+			<route>
+				<try doc:name="Try" doc:id="6a1c3c7c-de24-4061-87f2-00825d03ee32">
+					<flow-ref doc:name="Trust &amp; Investment" doc:id="97fa06b6-a51c-40fe-b9e7-06a9de92f2ba"
+						name="trust-investment-summaryFlow" />
+					<error-handler>
+						<on-error-continue enableNotifications="true"
+							logException="true" doc:name="On Error Continue"
+							doc:id="49f19a96-69cf-45d1-ab2d-53fd70736b7d">
+							<ee:transform doc:name="[]"
+								doc:id="7c749336-755a-414b-bf01-899b250021e7">
+								<ee:message>
+									<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+[]]]></ee:set-payload>
+								</ee:message>
+							</ee:transform>
+						</on-error-continue>
+					</error-handler>
+				</try>
+			</route>
+		</scatter-gather>
+		<ee:transform doc:name="flatten (payload..payload)"
+			doc:id="c1c26c2c-7dfa-4694-bb87-6db089206c01">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+flatten(payload..payload)]]></ee:set-payload>
+			</ee:message>
+			<ee:variables>
+				<ee:set-variable variableName="httpStatus"><![CDATA[200]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+	</flow>
+	<flow name="DP-accounts-summary-Flow" doc:id="58e46b50-8bc8-4242-bfa6-dfbff9423812" >
+		<flow-ref doc:name="DP Accounts " doc:id="bf95758c-2106-4359-82fa-07127f51d915" name="DP-accounts-Flow"/>
+		<ee:transform doc:name="Outer Response" doc:id="801a8a7b-4f83-448c-a28a-d9ba83e16313">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"type": "DP",
+	total_balance: sum(payload.AvailableBalance),
+	accounts: payload map {
+		id: $.AccountNumber,
+		type_code: $.AccountTypeCode as Number,
+		type_description: $.Category,
+		name: $.AccountTypeDescription,
+		nick_name: $.NickName,
+		balance: $.AvailableBalance as Number,
+		balance_as_of_date: $.BalanceAsOfDate,
+		created_date: null
+	}
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+		<flow-ref doc:name="Get Accounts Realtime Balance" doc:id="5a49de07-db0e-4f07-8ef9-68cd693e9d81" name="account-realtime-balanceFlow"/>
+	</flow>
+	<flow name="credit-cards-summaryFlow" doc:id="33549efd-d37c-42fc-b3e1-8e0839a65222" >
+		<flow-ref doc:name="Credit Cards" doc:id="e95b2b95-7f6c-4840-b7d0-c487884da99c" name="credit-cardsFlow"/>
+		<ee:transform doc:name="Outer Response" doc:id="b23f7ed4-ce97-4251-8b3a-2c2c962763de" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"type": "CC",
+	total_balance: sum(payload.AvailableBalance),
+	accounts: payload map  {
+		id: $.AccountNumber,
+		type_code: $.AccountTypeCode as Number,
+		type_description: $.AccountTypeDescription,
+		name: $.AccountTypeDescription,
+		nick_name: $.NickName,
+		balance: $.AvailableBalance as Number,
+		balance_as_of_date: $.BalanceOfDate,
+		created_date: null
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="lending-accouts-summaryFlow" doc:id="b4f1161f-e32b-462d-ba6d-2c7699f916c6" >
+		<flow-ref doc:name="Lending Accounts" doc:id="b8bdb88e-7cc6-443c-b89e-98764ee376dc" name="lending-accoutsFlow"/>
+		<ee:transform doc:name="Outer Response"
+			doc:id="e5699075-b8e3-4e77-8037-5579c1ac0abc">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"type": "LN",
+	total_balance: sum(payload.OutstandingBalance),
+	accounts: payload map {
+		id: $.NoteCommitmentAccountNumber,
+		type_code: null,
+		type_description: $.AccountTypeDescription,
+		name: $.AccountTypeDescription,
+		nick_name: $.NickName,
+		balance: $.OutstandingBalance as Number,
+		balance_as_of_date: $.BalanceAsOfDate,
+		created_date: null
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="brokerage-accouts-summaryFlow" doc:id="6283c52e-4a2f-4d32-a1e6-a23591ca6b30" >
+		<flow-ref doc:name="Brokerage Accouts" doc:id="da751b0c-8ce6-4132-ba0a-a0896e41f023" name="brokerage-accoutsFlow"/>
+		<ee:transform doc:name="Outer Response"
+			doc:id="b1559071-61f0-4d55-86e1-0750c712d4c1">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"type": "INVMT",
+	total_balance: sum(payload.MarketValue),
+	accounts: payload map  {
+		id: $.HostAccountNumber,
+		type_code: null,
+		type_description: $.AccountTypeDescription,
+		name: $.AccountTypeDescription,
+		nick_name: $.NickName,
+		balance: $.MarketValue as Number,
+		balance_as_of_date: $.MarketValueAsOfDate,
+		created_date: null
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="trust-investment-summaryFlow" doc:id="e4381e79-09d6-4033-8b48-9c8930133b27" >
+		<flow-ref doc:name="Trust &amp; Investment" doc:id="8eb91554-d33b-4d24-a229-f27da6289bad" name="trust-investmentFlow"/>
+		<ee:transform doc:name="Outer Response"
+			doc:id="a1e62f10-7549-4f1a-a35f-502a0cd3be14">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"type": "TRST1",
+	total_balance: sum(payload.MarketValue),
+	accounts: payload map {
+		id: $.AccountNumber,
+		type_code: $.AccountType as Number,
+		type_description: $.AccountTypeDescription,
+		name: $.AccountName,
+		nick_name: $.NickName,
+		balance: $.MarketValue as Number,
+		balance_as_of_date: $.MarketValueAsOfDate,
+		created_date: null
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	
+</mule>

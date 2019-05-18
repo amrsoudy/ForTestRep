@@ -1,0 +1,15 @@
+http:
+  port: "8081"
+  
+innerAPI:
+  basePath: "/v1"
+  host: "cnb-inner-session-api.us-e2.cloudhub.io"
+  port: "80"
+  
+  
+SQLDb:
+  host: "LAPTOP-DQOEA8UM"
+  port: "1433"
+  user: "sa"
+  password: "."
+  database: "AdventureWorks"

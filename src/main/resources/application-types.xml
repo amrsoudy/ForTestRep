@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="account-generic-account-type-response" format="json">
+      <types:shape format="weave" example="examples/account-generic-account-type-response.json"><![CDATA[%dw 2.0
+type account_generic_account_type_response = {|
+  "type": String, 
+  total_balance: Number {"typeId": "double"}, 
+  accounts: Array<{|
+    id: String, 
+    type_code: Number {"typeId": "int"}, 
+    type_description: String, 
+    name: String, 
+    nick_name: String, 
+    balance: Number {"typeId": "int"}, 
+    balance_as_of_date: String, 
+    created_date: String
+  |}>
+|} {"MetadataFormat": "json",
+"example": "{\"type\":\"DP\",\"total_balance\":100000.34,\"accounts\":[{\"id\":\"80000072\",\"type_code\":1,\"type_description\":\"Interest Checking\",\"name\":\"PERSONAL CHECKING\",\"nick_name\":\"TEST\",\"balance\":60000,\"balance_as_of_date\":\"2019-03-25T10:41:00\",\"created_date\":\"2019-01-22T14:53:38\"},{\"id\":\"68000042\",\"type_code\":41,\"type_description\":\"Savings\",\"name\":\"PERSONAL SAVINGS\",\"nick_name\":\"Fun fund\",\"balance\":40000.34,\"balance_as_of_date\":\"2019-03-25T10:41:00\",\"created_date\":\"2019-03-08T08:21:41\"}]}"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="outer-DP-accounts-overview-response" format="json">
+      <types:shape format="weave" example="examples/outer-DP-accounts-overview-response.json"><![CDATA[%dw 2.0
+type outer_DP_accounts_overview_response = {|
+  available_balance: Number {"typeId": "double"}, 
+  current_balance: Number {"typeId": "double"}, 
+  id: String, 
+  interest_earned_YTD: Number {"typeId": "double"}, 
+  interest_rate: Number {"typeId": "double"}, 
+  name: String, 
+  nick_name: String, 
+  pending_balance: Number {"typeId": "double"}, 
+  routing_number: String
+|} {"MetadataFormat": "json",
+"example": "{\"available_balance\":12765.92,\"current_balance\":55728.83,\"id\":\"80000072\",\"interest_earned_YTD\":121.34,\"interest_rate\":5.43,\"name\":\"PERSONAL CHECKING\",\"nick_name\":\"TEST\",\"pending_balance\":55728.83,\"routing_number\":\"0031234\"}"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#a2737dd7-2ae1-4b16-9fa3-a0c690e1588c">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:message>
+          <types:payload type="account-generic-account-type-response"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#2e4bf360-d16f-46ac-9f83-d6695fab8b15">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:message>
+          <types:payload type="account-generic-account-type-response"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#a087c487-7092-4e2b-83e4-9a681869f104">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:message>
+          <types:payload type="account-generic-account-type-response"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#3a371239-badb-47b3-bf61-d74d326e7777">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:attributes type="account-generic-account-type-response"/>
+        </types:message>
+      </types:input-event>
+      <types:output-event>
+        <types:message>
+          <types:payload type="outer-DP-accounts-overview-response"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>

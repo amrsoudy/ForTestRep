@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<apikit:config name="cnb-outer-account-api-config" raml="cnb-outer-account-api.raml"
+		outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+	<flow name="cnb-outer-account-api-main">
+		<http:listener path="/api/*" config-ref="HTTP_Listener_config">
+			<http:response statusCode="#[vars.httpStatus default 200]">
+				<http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+			</http:response>
+			<http:error-response statusCode="#[vars.httpStatus default 500]">
+				<http:body><![CDATA[#[payload]]]></http:body>
+				<http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+			</http:error-response>
+		</http:listener>
+		<apikit:router config-ref="cnb-outer-account-api-config" />
+	</flow>
+	<flow name="cnb-outer-account-api-console">
+		<http:listener path="/console/*" config-ref="HTTP_Listener_config">
+			<http:response statusCode="#[vars.httpStatus default 200]">
+				<http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+			</http:response>
+			<http:error-response statusCode="#[vars.httpStatus default 500]">
+				<http:body><![CDATA[#[payload]]]></http:body>
+				<http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+			</http:error-response>
+		</http:listener>
+		<apikit:console config-ref="cnb-outer-account-api-config" />
+		<error-handler>
+			<on-error-propagate type="APIKIT:NOT_FOUND">
+				<ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+					xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Resource not found"}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables>
+						<ee:set-variable variableName="httpStatus">404
+						</ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow name="get:\v1\accounts\summary:cnb-outer-account-api-config">
+		<flow-ref doc:name="account-summaryFlow" doc:id="17c5651c-a4ac-429e-8c67-9eb49258693e"
+			name="account-summaryFlow" />
+	</flow>
+	<flow name="get:\v1\accounts\(accountId):cnb-outer-account-api-config">
+		<choice doc:name="Choice" doc:id="ec49acfd-2f03-41cd-8060-f3e1acd42a5d">
+			<when expression="#[isEmpty(payload.accountid)]">
+				<ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+					doc:id="ecc5a3ee-92f6-4aa4-8af5-e21b894b57e0">
+					<ee:variables>
+						<ee:set-variable variableName="accountId"><![CDATA[attributes.uriParams.accountId]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</when>
+			<otherwise>
+				<set-variable value="#[payload.accountid]" doc:name="accountId"
+					doc:id="dc293ec8-96c1-4d91-9395-42a9cc0aaef6" variableName="accountId" />
+			</otherwise>
+		</choice>
+		<flow-ref doc:name="account-overview-routerFlow" doc:id="bf004993-b415-4d1d-8530-8159bd37795c"
+			name="account-overview-routerFlow" />
+	</flow>
+</mule>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:munit="http://www.mulesoft.org/schema/mule/munit"
+	xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<munit:config name="Iaccount-test-suite.xml" />
+	<munit:test
+		name="Iaccount-test-suite-get:\v1\accounts\summary:cnb-outer-account-api-configTest"
+		description="Test" doc:id="ff1b9302-552e-423e-8ecc-0b9e5418d499">
+		<munit:execution>
+			<flow-ref
+				doc:name="get:\v1\accounts\summary:cnb-outer-account-api-config"
+				doc:id="6b9ab6b6-220e-4edc-ab1d-f3bc407074db" name="get:\v1\accounts\summary:cnb-outer-account-api-config" />
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that doc:name="httpStatus = 200"
+				doc:id="903a305d-7607-4b68-a2e8-76de9e278291" expression="#[vars.httpStatus]"
+				is="#[MunitTools::equalTo(200)]" message="Couldn't retrive account sumary" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="DP-success-overview" description="Test"
+		doc:id="51279004-ed5a-4732-b26c-e1af3bb28f3f">
+		<munit:execution>
+			<set-payload value='#[{
+	"accountid": "80000072"
+}]'
+				doc:name="80000072" doc:id="02c41963-8ced-45c3-9db8-bea2f209fd39" />
+			<flow-ref
+				doc:name="get:\v1\accounts\(accountId):cnb-outer-account-api-config"
+				doc:id="2e3e2cb8-1bfd-493c-afce-d0c4d53121f2" name="get:\v1\accounts\(accountId):cnb-outer-account-api-config" />
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that doc:name="httpStatus = 200"
+				doc:id="b87b8911-7268-48b8-a079-d6cddaa5f43c" expression="#[vars.httpStatus]"
+				is="#[MunitTools::equalTo(200)]" message="Error while getting DP accounts overview" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="DP-failure-overview" description="Test"
+		doc:id="97abafcf-c5ff-4750-b4ae-142cbe37b0c3">
+		<munit:execution>
+			<set-payload value='#[{
+	"accountid": "testaccount"
+}]'
+				doc:name="testaccount" doc:id="c6674b1f-f781-4a4e-857a-469d3ff91a9f" />
+			<flow-ref doc:name="get:\v1\accounts\(accountId):cnb-outer-account-api-config"
+				doc:id="6db01457-f3df-48d2-b889-a0c6b4907fd1" name="get:\v1\accounts\(accountId):cnb-outer-account-api-config" />
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that doc:name="httpStatus = 400 and error_code=1300"
+				doc:id="7e4cd452-926a-4ae0-81bd-d08a5f440158" expression='#[payload.error_code]'
+				is="#[MunitTools::equalTo('1300')]" message="Error while getting DP accounts overview" />
+		</munit:validation>
+	</munit:test>
+</mule>

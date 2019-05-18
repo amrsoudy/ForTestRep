@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="get-user-OSC-idFlow" doc:id="3e9160cd-e075-4af0-9e3e-04afadbd49dd">
+		<logger level="INFO" doc:name="Call Inner API to get user Id"
+			doc:id="d45e5711-09f8-4ece-b626-2a79690e93cf" />
+		<set-variable value="1" doc:name="Set user OSC id"
+			doc:id="06a30651-6059-409c-93a9-ce2ae1f081dd" variableName="userid" />
+	</flow>
+	<flow name="account-realtime-balanceFlow" doc:id="2bfcb963-fc35-4371-858e-933170b04264">
+		<logger level="INFO" doc:name="Call Outer API to get realtime balance"
+			doc:id="af46670e-db6b-48b0-af47-361ee027220f" />
+	</flow>
+	<flow name="DP-accounts-Flow" doc:id="c6aa80fc-7e98-420b-ae0d-3683c5417e76">
+		<ee:transform doc:name="dbo.GetBalancesForDeposit"
+			doc:id="6adef9b4-55e2-4f29-a0b2-cf1d119abb34">
+			<ee:message>
+				<ee:set-payload resource="account-mock-SP-response.dwl" />
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="credit-cardsFlow" doc:id="1f37a192-86a0-43c3-91f5-2b6091bfa2ba">
+		<ee:transform doc:name="dbo.GetBalancesForCreditCard"
+			doc:id="56343a11-0a57-4ac7-bad0-1f7050afc732">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+[
+    {
+        "AccountNumber": "1234-5678-9012-3456",
+        "AccountTypeCode": 3553,
+        "AccountTypeDescription": "CASH BACK VISA SIGNATURE CARD",
+        "NickName": "The golden card",
+        "AvailableBalance": 3500,
+        "BalanceOfDate": "2019-03-25T10:41:00"
+    },
+    {
+        "AccountNumber": "9876-5432-1098-7654",
+        "AccountTypeCode": 2755,
+        "AccountTypeDescription": "VISA PLATINUM CARD WITH REWARDS",
+        "NickName": "Rewards Card",
+        "AvailableBalance": 5400,
+        "BalanceOfDate": "2019-02-25T10:41:00"
+    }
+
+]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="lending-accoutsFlow" doc:id="e7a71f21-f191-481e-b4da-a49062a69c5b">
+		<ee:transform doc:name="dbo. GetBalancesForLoans"
+			doc:id="87ac5372-e53f-4d25-a2a0-29c8a70a1dc0">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+[
+    {
+        "NoteCommitmentAccountNumber": "54360000",
+        "AccountTypeDescription": "TERM LOAN TO BUSINESS",
+        "NickName": "My Term Loan",
+        "OutstandingBalance": 4564575,
+        "BalanceAsOfDate": "2019-03-25T10:41:00"
+    },
+    {
+        "NoteCommitmentAccountNumber": "99890000",
+        "AccountTypeDescription": "HOME EQUITY",
+        "NickName": "Home sweet home",
+        "OutstandingBalance": 4343543,
+        "BalanceAsOfDate": "2019-02-25T10:41:00"
+    }
+
+]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="brokerage-accoutsFlow" doc:id="ec65b64e-8bcf-47d7-aef0-7e83c668f345">
+		<ee:transform doc:name="dbo. GetBalancesForBrokerage"
+			doc:id="0cd25b48-c0c6-4a48-8847-3a5cf4aa95ec">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+[
+    {
+        "HostAccountNumber": "324540000",
+        "AccountTypeDescription": "TBD",
+        "NickName": "TBD",
+        "MarketValue": 4000000,
+        "MarketValueAsOfDate": "2019-03-25T10:41:00"
+    },
+    {
+        "HostAccountNumber": "5355500000",
+        "AccountTypeDescription": "TBD",
+        "NickName": "TBD",
+        "MarketValue": 5000000,
+        "MarketValueAsOfDate": "2019-02-25T10:41:00"
+    }
+
+]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		
+	</flow>
+	<flow name="trust-investmentFlow" doc:id="cdaece0c-2705-4053-8fe6-48cda2ff517e">
+		<ee:transform doc:name="dbo. GetBalancesForTI"
+			doc:id="37703514-a5a2-44ef-8da6-72729ec16e13">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+[
+    {
+        "AccountNumber": "676870000",
+        "AccountType": 75,
+        "AccountName": "CORPORATE TRUST",
+        "AccountTypeDescription": "BOND TRUSTEESHIP",
+        "NickName": "Bond Trust",
+        "MarketValue": 500000,
+        "MarketValueAsOfDate": "2019-03-25T10:41:00"
+    },
+    {
+        "AccountNumber": "67688600000",
+        "AccountType": 92,
+        "AccountName": "BUSINESS ESCROW",
+        "AccountTypeDescription": "SECURITIES ESCROW",
+        "NickName": "Sec Escrow",
+        "MarketValue": 300000,
+        "MarketValueAsOfDate": "2019-02-25T10:41:00"
+    }
+
+]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		
+	</flow>
+</mule>

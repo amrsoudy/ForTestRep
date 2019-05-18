@@ -1,0 +1,19 @@
+[
+    {
+        "AccountNumber": "1234-5678-9012-3456",
+        "AccountTypeCode": 3553,
+        "AccountTypeDescription": "CASH BACK VISA SIGNATURE CARD",
+        "NickName": "Fun Fund",
+        "AvailableBalance": 3500,
+        "BalanceOfDate": "2019-03-25T10:41:00"
+    },
+    {
+        "AccountNumber": "9876-5432-1098-7654",
+        "AccountTypeCode": 2755,
+        "AccountTypeDescription": "VISA PLATINUM CARD WITH REWARDS",
+        "NickName": "PUBLIC Fund",
+        "AvailableBalance": 5400,
+        "BalanceOfDate": "2019-02-25T10:41:00"
+    }
+
+]

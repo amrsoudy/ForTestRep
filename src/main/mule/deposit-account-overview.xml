@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+	<flow name="deposit-account-overviewFlow" doc:id="9fab0279-8331-4aaf-a798-9e9725eb23b1" >
+		<flow-ref doc:name="get-user-OSC-idFlow" doc:id="dba172c7-f6e4-4c24-b789-1bcc8394e508" name="get-user-OSC-idFlow" />
+		<flow-ref doc:name="DP-accountsFlow" doc:id="8c8d9cfd-4fec-4037-8c4f-eb00f12e7519" name="DP-accountsFlow"/>
+		<flow-ref doc:name="account-realtime-balanceFlow" doc:id="4d92c117-6363-4320-bbf4-fd36f86d9829" name="account-realtime-balanceFlow"/>
+		<ee:transform doc:name="Outer Response" doc:id="20daf934-04ca-4f37-88a0-11b4941dd8cd" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	available_balance: attributes.accounts.balance,
+	current_balance: 123,
+	id: attributes.accounts.id,
+	interest_earned_YTD: 121.34,
+	interest_rate: 5.43,
+	name: attributes.accounts.name,
+	nick_name: attributes.accounts.nick_name,
+	pending_balance: attributes.accounts.balance_as_of_date,
+	routing_number: "TBD - 0031234"
+}
+           
+]]></ee:set-payload>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="httpStatus" ><![CDATA[200]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="834806c0-d5a1-4e86-afc4-3c067807af47" type="ANY">
+				<ee:transform doc:name="payload" doc:id="46a40134-3409-48ec-a065-43d539a5a6eb" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-continue>
+		</error-handler>
+	
+</flow>
+	<flow name="DP-accountsFlow" doc:id="3c2b3aa3-e8f4-4681-921f-1dccf9b0ec18" >
+		<flow-ref doc:name="DP-accounts-Flow" doc:id="4c580da6-0a01-4ef6-a1c0-1e992368d648" name="DP-accounts-Flow" />
+		<ee:transform doc:name="Filter Accounts" doc:id="3e829c79-3399-47cf-afb1-2b5953c96105">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"type": "DP",
+	total_balance: sum(payload.AvailableBalance),
+	accounts: payload map {
+		id: $.AccountNumber,
+		type_code: $.AccountTypeCode as Number,
+		type_description: $.Category,
+		name: $.AccountTypeDescription,
+		nick_name: $.NickName,
+		balance: $.AvailableBalance as Number,
+		balance_as_of_date: $.BalanceAsOfDate,
+		created_date: null
+	} filter $.id == vars.accountId	
+}
+
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<validation:is-not-empty-collection doc:name="No Match" doc:id="c424431d-be1c-45e2-b846-8eda3d1503a3" message=" there is no match" values="#[payload.accounts]">
+			<error-mapping sourceType="VALIDATION:EMPTY_COLLECTION" targetType="APP:NOMATCH" />
+		</validation:is-not-empty-collection>
+		<error-handler>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="8fbcf994-cf1b-4851-b98a-272ef30dae40" type="ANY">
+				<ee:transform doc:name="Raise Validation Error" doc:id="99f99e8b-5606-42aa-b652-e8318772e9c2" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+  error_code: "1300",
+  "error_message:": "Couldn't find matching DP accounts"
+}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="httpStatus" ><![CDATA[400]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+</mule>

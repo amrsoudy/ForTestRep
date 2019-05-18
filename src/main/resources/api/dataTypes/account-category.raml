@@ -1,0 +1,16 @@
+#%RAML 1.0 DataType
+type: object
+properties:
+  type:
+    description: Account category type for the collection of accounts.
+    example: DP
+    type: string
+  total_balance:
+    description: Total of all balances across the collection of accounts within the category.
+    example: 123456.78
+    type: number
+  accounts:
+    description: List of accounts within the category
+    type: array
+    items:
+      type: AccountSummary

@@ -1,0 +1,139 @@
+#%RAML 1.0
+title: Accounts API
+description: 'Services related to account details, preferences, and transactions.'
+version: v1
+(oas-info):
+  termsOfService: 'http://swagger.io/terms/'
+  contact:
+    name: IBM
+    url: 'https://www.ibm.com/'
+    email: jyoungwa@ca.ibm.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+annotationTypes:
+  oas-info:
+    properties:
+      termsOfService?: string
+      contact?:
+        properties:
+          name?: string
+          url?: string
+          email?: string
+      license?:
+        properties:
+          name?: string
+          url?: string
+    allowedTargets: API
+  oas-tags-definition:
+    allowedTargets: API
+    type: array
+    items:
+      properties:
+        name: string
+        description?: string
+        externalDocs?:
+          properties:
+            url: string
+            description?: string
+  oas-format:
+    type: string
+    allowedTargets: TypeDeclaration
+  oas-summary:
+    type: string
+    allowedTargets: Method
+  oas-tags:
+    type: 'string[]'
+    allowedTargets: Method
+(oas-tags-definition):
+  - name: accounts
+    description: Operations for accounts
+protocols:
+  - HTTPS
+baseUri: 'https://TBD/api'
+types:
+  AccountCategory: !include dataTypes/account-category.raml
+  AccountSummary: !include dataTypes/account-summary.raml
+  AccountSummaryResponse: !include dataTypes/account-summary-response.raml 
+  ErrorResponse: !include dataTypes/error-response.raml
+  Account: !include dataTypes/account.raml
+traits:
+  request-headers-required: !include traits/request-headers.raml
+/{version}/accounts:
+  /summary:
+    get:
+      is:
+        [request-headers-required]
+      description: Get summary of account information for the current user
+      displayName: getAccountSummaryUsingGET
+      responses:
+        200:
+          description: '0: Success'
+          body:
+            application/json:
+              type: AccountSummaryResponse
+              example: !include examples/account-summary-response.raml
+        400:
+          description: '1200: Invalid path parameter'
+          body:
+            application/json:
+              type: ErrorResponse
+        403:
+          description: '1110: Invalid token in Authorization header'
+          body:
+            application/json:
+              type: ErrorResponse
+        500:
+          description: '1000: Unknown exception occurred'
+          body:
+            application/json:
+              type: ErrorResponse
+        503:
+          description: '1001: In Maintenance mode'
+          body:
+            application/json:
+              type: ErrorResponse
+      (oas-summary): Get account /,.summary
+      (oas-tags):
+        - accounts
+  /{accountId}:
+    get:
+      is:
+        [request-headers-required]
+      description: 'Depending on the account type and account sub-type, the response will contain different fields.'
+      displayName: getAccountDetailsUsingGET
+      responses:
+        200:
+          description: '0: Success'
+          body:
+            application/json:
+              type: Account
+              example:
+                !include examples/account-overview-response.raml
+        400:
+          description: '1200: Invalid path parameter'
+          body:
+            application/json:
+              type: ErrorResponse
+        403:
+          description: '1110: Invalid token in Authorization header'
+          body:
+            application/json:
+              type: ErrorResponse
+        500:
+          description: '1000: Unknown exception occurred'
+          body:
+            application/json:
+              type: ErrorResponse
+        503:
+          description: '1001: In Maintenance mode'
+          body:
+            application/json:
+              type: ErrorResponse
+      (oas-summary): Get account overview and details
+      (oas-tags):
+        - accounts
+    uriParameters:
+      accountId:
+        description: Unique identifier for a given the account
+        type: string

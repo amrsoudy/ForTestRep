@@ -1,0 +1,21 @@
+[
+    {
+        "AccountNumber": "676870000",
+        "AccountType": 75,
+        "AccountName": "CORPORATE TRUST",
+        "AccountTypeDescription": "BOND TRUSTEESHIP",
+        "NickName": "Bond Trust",
+        "MarketValue": 500000,
+        "MarketValueAsOfDate": "2019-03-25T10:41:00"
+    },
+    {
+        "AccountNumber": "67688600000",
+        "AccountType": 92,
+        "AccountName": "BUSINESS ESCROW",
+        "AccountTypeDescription": "SECURITIES ESCROW",
+        "NickName": "Sec Escrow",
+        "MarketValue": 300000,
+        "MarketValueAsOfDate": "2019-02-25T10:41:00"
+    }
+
+]

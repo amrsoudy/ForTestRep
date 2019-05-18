@@ -1,0 +1,21 @@
+#%RAML 1.0 Trait
+headers:
+      Authorization:
+        description: OAuth2 token
+        type: string
+      User-Agent:
+        description: HTTP USER_AGENT
+        type: string
+        required: false
+      Host:
+        description: Client IP address
+        type: string
+        required: false
+      Client-Info:
+        description: 'Application Name, Platform and Version. e.g. appname=cnb_mobile, platform=ios, version=v1.0'
+        required: false
+        type: string
+      Trace-Id:
+        description: Unique Trace ID to provision cross tier traceability.
+        required: false
+        type: string

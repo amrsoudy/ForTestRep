@@ -1,0 +1,41 @@
+#%RAML 1.0 DataType
+description: An account object
+type: object
+properties:
+  id:
+    description: Account number
+    example: "80000072"
+    type: string
+  type_code:
+    required: false
+    description: Account type code
+    example: 1
+    type: integer
+    format: int32
+  type_description:
+    description: Account type description
+    example: Interest Checking
+    type: string
+  name:
+    description: Default name of the account
+    example: PERSONAL CHECKING
+    type: string
+  nick_name:
+    description: Optional name given account by the user
+    example: TEST
+    type: string
+    required: false
+  balance:
+    description: Balance amount
+    example: 60000.22
+    type: number
+  balance_as_of_date:
+    description: Datetime of when balance was determined
+    example: '2019-03-25T10:41:00'
+    type: datetime-only
+    required: false
+  created_date:
+    description: Datetime of when account was created
+    example: '2019-01-22T14:53:38'
+    type: datetime-only
+    required: false

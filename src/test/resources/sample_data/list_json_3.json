@@ -1,0 +1,17 @@
+[
+    {
+        "HostAccountNumber": "324540000",
+        "AccountTypeDescription": "TBD",
+        "NickName": "TBD",
+        "MarketValue": 4000000,
+        "MarketValueAsOfDate": "2019-03-25T10:41:00"
+    },
+    {
+        "HostAccountNumber": "5355500000",
+        "AccountTypeDescription": "TBD",
+        "NickName": "TBD",
+        "MarketValue": 5000000,
+        "MarketValueAsOfDate": "2019-02-25T10:41:00"
+    }
+
+]

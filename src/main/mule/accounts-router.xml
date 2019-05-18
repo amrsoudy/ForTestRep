@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<flow name="account-overview-routerFlow" doc:id="85dbc9ac-a761-4655-bd62-c825a9b210e6">
+		<flow-ref doc:name="Get User OSC ID" doc:id="447850d0-47d3-465a-8305-1ee464d9d187" name="get-user-OSC-idFlow"/>
+		<ee:transform doc:name="dbo.GetAccountsForClient"
+			doc:id="23a378a5-5c97-4363-97d9-de05880dc206">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	product_type_code: "DP"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<choice doc:name="Choice" doc:id="5dfec97a-8190-4613-a48e-083a175bbc95">
+			<when expression='#[payload.product_type_code == "DP"]'>
+				<flow-ref doc:name="Deposit Account Overview" doc:id="42e2bd01-553d-4da9-a24b-8e447e96cd2a" name="deposit-account-overviewFlow"/>
+			</when>
+			<otherwise>
+				<ee:transform doc:name="Transform Message"
+					doc:id="77394fbe-8982-487f-b468-23d4be81a6a6">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+{
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</otherwise>
+		</choice>
+	</flow>
+	
+</mule>
