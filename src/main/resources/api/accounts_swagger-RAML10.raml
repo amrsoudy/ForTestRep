@@ -1,0 +1,922 @@
+#%RAML 1.0
+title: Accounts API
+version: 1.5.0
+baseUri: https://anypoint.mulesoft.com/mocking/api/v1/links/35df03f3-cb22-44a1-bae8-ac9382276614/api/v1/accounts # baseUri: https://TBD/api/v1/accounts
+baseUriParameters: {}
+protocols:
+- HTTPS
+documentation:
+- title: Accounts API
+  content: Services related to account details, preferences, and transactions.
+types:
+  AccountSummaryResponse:
+    displayName: AccountSummaryResponse
+    description: Summary of accounts
+    type: object
+    properties:
+      summary:
+        required: true
+        displayName: summary
+        type: array
+        items:
+          type: AccountSummary
+  AccountSummary:
+    displayName: AccountSummary
+    description: Collection of accounts within a certain category
+    type: object
+    properties:
+      category:
+        required: true
+        displayName: category
+        description: Account category for the collection of accounts (DP / CC / LN / INVMT / TRST1).
+        type: string
+      total_balance:
+        required: true
+        displayName: total_balance
+        type: Money
+      accounts:
+        required: true
+        displayName: accounts
+        description: List of accounts within the category
+        type: array
+        items:
+          type: Account
+  UpdateNicknameRequest:
+    displayName: UpdateNicknameRequest
+    description: Account nickname request
+    type: object
+    properties:
+      nick_name:
+        required: true
+        displayName: nick_name
+        description: Account nickname
+        type: string
+      category:
+        required: true
+        displayName: category
+        description: Account category for the given account (DP / CC / LN / INVMT / TRST1).
+        type: string
+  Preferences:
+    displayName: Preferences
+    type: object
+    properties:
+      category:
+        required: false
+        displayName: category
+        description: Account category (DP, CC, LN, INVMT, TRST1
+        type: string
+      account_preferences:
+        required: false
+        displayName: account_preferences
+        description: list of account preferences
+        type: array
+        items:
+          type: AccountPreferences
+  Account:
+    displayName: Account
+    description: An account object
+    type: object
+    properties:
+      type_code:
+        required: false
+        displayName: type_code
+        description: Specific account type code
+        type: integer
+        format: int32
+      type_description:
+        required: false
+        displayName: type_description
+        description: Specific account type description
+        type: string
+      id:
+        required: true
+        displayName: id
+        description: Account id
+        type: string
+      number:
+        required: true
+        displayName: number
+        description: Account number
+        type: string
+      name:
+        required: true
+        displayName: name
+        description: Default name of the account
+        type: string
+      nick_name:
+        required: false
+        displayName: nick_name
+        description: Optional name given account by the user
+        type: string
+      available_balance:
+        required: false
+        displayName: available_balance
+        type: Money
+      current_balance:
+        required: false
+        displayName: current_balance
+        type: Money
+      market_value:
+        required: false
+        displayName: market_value
+        type: Money
+      balance_as_of_date:
+        required: false
+        displayName: balance_as_of_date
+        description: Datetime of when balance data was determined
+        type: datetime
+  ExtendedAccount:
+    displayName: ExtendedAccount
+    type: object
+    properties:
+      type_code:
+        required: false
+        displayName: type_code
+        description: Specific account type code
+        type: integer
+        format: int32
+      type_description:
+        required: false
+        displayName: type_description
+        description: Specific account type description
+        type: string
+      id:
+        required: true
+        displayName: id
+        description: Account id
+        type: string
+      number:
+        required: true
+        displayName: number
+        description: Account number
+        type: string
+      name:
+        required: true
+        displayName: name
+        description: Default name of the account
+        type: string
+      nick_name:
+        required: false
+        displayName: nick_name
+        description: Optional name given account by the user
+        type: string
+      available_balance:
+        required: false
+        displayName: available_balance
+        type: Money
+      current_balance:
+        required: false
+        displayName: current_balance
+        type: Money
+      market_value:
+        required: false
+        displayName: market_value
+        type: Money
+      balance_as_of_date:
+        required: false
+        displayName: balance_as_of_date
+        description: Datetime of when balance data was determined
+        type: datetime
+      category:
+        required: true
+        displayName: category
+        description: Account category. DP = Deposits, CC = Credit Card, LN = Lending, INVMT = Brokerage, TRST1 = Trusts & Investments
+        type: string
+      sub_category:
+        required: false
+        displayName: sub_category
+        description: Account sub-category. If type is CC then sub_type is ICA or SCA or PCA or JCA. If type is LN then sub_type is HELOC or MORTGAGE or LOC or LOAN. If type is INVMT or TRST1 then sub_type is REGULAR or HOLDING
+        type: string
+      interest_rate:
+        required: false
+        displayName: interest_rate
+        description: Interest rate for DP or LN accounts in percentage
+        type: number
+        format: double
+      interest_earned_YTD:
+        required: false
+        displayName: interest_earned_YTD
+        type: Money
+      pending_balance:
+        required: false
+        displayName: pending_balance
+        type: Money
+      available_credit:
+        required: false
+        displayName: available_credit
+        type: Money
+      credit_limit:
+        required: false
+        displayName: credit_limit
+        type: Money
+      min_payment_amount:
+        required: false
+        displayName: min_payment_amount
+        type: Money
+      payment_due_date:
+        required: false
+        displayName: payment_due_date
+        description: Payment due date for CC or LN accounts (yyyy-mm-dd)
+        type: string
+      purchase_apr:
+        required: false
+        displayName: purchase_apr
+        description: Purchases interest rate for CC accounts in percentage
+        type: number
+        format: double
+      cash_apr:
+        required: false
+        displayName: cash_apr
+        description: Cash advance interest rate for CC accounts in percentage
+        type: number
+        format: double
+      rewards_balance:
+        required: false
+        displayName: rewards_balance
+        type: Money
+      card_holder_name:
+        required: false
+        displayName: card_holder_name
+        description: Name of card holder when JCA/PCA viewing co-owner or viewing SCA card
+        type: string
+      draw_period_end_date:
+        required: false
+        displayName: draw_period_end_date
+        description: Draw period end date for LN HELOC accounts (yyyy-mm-dd)
+        type: string
+      rate_adjustment_date:
+        required: false
+        displayName: rate_adjustment_date
+        description: Rate adjustment date for LN Mortgage accounts (yyyy-mm-dd)
+        type: string
+      num_payments_remaining:
+        required: false
+        displayName: num_payments_remaining
+        description: Number of payments remaining on LN account
+        type: integer
+        format: int64
+      last_payment_date:
+        required: false
+        displayName: last_payment_date
+        description: Date last payment was made on LN accounts - format (yyyy-mm-dd)
+        type: string
+      next_payment_amount:
+        required: false
+        displayName: next_payment_amount
+        type: Money
+      outstanding_principal_balance:
+        required: false
+        displayName: outstanding_principal_balance
+        type: Money
+      outstanding_interest_balance:
+        required: false
+        displayName: outstanding_interest_balance
+        type: Money
+      original_balance:
+        required: false
+        displayName: original_balance
+        type: Money
+      change_in_value:
+        required: false
+        displayName: change_in_value
+        type: Money
+      change_in_percent:
+        required: false
+        displayName: change_in_percent
+        description: Change in percentage value since last close date of the INVMT or TRST1 account. Can be positive or negative.
+        type: number
+        format: double
+      accrued_income:
+        required: false
+        displayName: accrued_income
+        type: Money
+      estimated_income:
+        required: false
+        displayName: estimated_income
+        type: Money
+      total_cost_basis:
+        required: false
+        displayName: total_cost_basis
+        type: Money
+      realized_gain_loss:
+        required: false
+        displayName: realized_gain_loss
+        type: Money
+      unrealized_gain_loss:
+        required: false
+        displayName: unrealized_gain_loss
+        type: Money
+      unrealized_gain_loss_percent:
+        required: false
+        displayName: unrealized_gain_loss_percent
+        description: Potential value gained or lost of INVMT or TRST1 account in percentage
+        type: number
+        format: double
+      security_holdings:
+        required: false
+        displayName: security_holdings
+        type: Money
+      cash_and_equivalent:
+        required: false
+        displayName: cash_and_equivalent
+        type: Money
+      ticker_symbol:
+        required: false
+        displayName: ticker_symbol
+        description: Stock ticker symbol for holding INVMT or TRST1 account
+        type: string
+      investment_name:
+        required: false
+        displayName: investment_name
+        description: Name of investment for holding INVMT or TRST1 account
+        type: string
+      number_of_units:
+        required: false
+        displayName: number_of_units
+        description: Number of units of investment held for holding INVMT or TRST1 account
+        type: integer
+        format: int32
+      investment_cost:
+        required: false
+        displayName: investment_cost
+        type: Money
+      asset_type:
+        required: false
+        displayName: asset_type
+        description: Asset type for holding INVMT or TRST1 account
+        type: string
+  Money:
+    displayName: Money
+    type: object
+    properties:
+      amount:
+        required: false
+        displayName: amount
+        description: Amount
+        type: number
+        format: double
+      currency:
+        required: true
+        default: USD
+        displayName: currency
+        description: Currency code
+        type: string
+  TransactionsResponse:
+    displayName: TransactionsResponse
+    type: object
+    properties:
+      transactions:
+        required: false
+        displayName: transactions
+        type: array
+        items:
+          type: Transaction
+  Transaction:
+    displayName: Transaction
+    type: object
+    properties:
+      transaction_type:
+        required: false
+        displayName: transaction_type
+        description: Transaction type (pending or posted)
+        type: string
+        enum:
+        - pending
+        - posted
+      transaction_amount:
+        required: false
+        displayName: transaction_amount
+        type: Money
+      international_amount:
+        required: false
+        displayName: international_amount
+        type: Money
+      international_conversion_rate:
+        required: false
+        displayName: international_conversion_rate
+        description: Foreign currency conversion rate if foreign currency transaction - up to four decimal places
+        type: number
+        format: double
+      international_country:
+        required: false
+        displayName: international_country
+        description: Foreign currency country name.
+        type: string
+      description:
+        required: false
+        displayName: description
+        description: Transaction description
+        type: string
+      transaction_date:
+        required: false
+        displayName: transaction_date
+        description: Actual transaction date
+        type: datetime
+      transaction_posted_date:
+        required: false
+        displayName: transaction_posted_date
+        description: Posted transaction date (if type is posted)
+        type: datetime
+      transaction_category:
+        required: false
+        displayName: transaction_category
+        description: Transaction category
+        type: string
+        enum:
+        - credit
+        - debit
+        - payment
+        - advance
+        - fees
+        - interest
+      ticker_symbol:
+        required: false
+        displayName: ticker_symbol
+        description: Stock ticker symbol for INVMT or TRST1 account
+        type: string
+      number_of_units:
+        required: false
+        displayName: number_of_units
+        description: Number of units of investment held for INVMT or TRST1 account
+        type: integer
+        format: int32
+      unit_price:
+        required: false
+        displayName: unit_price
+        type: Money
+      merchant_info:
+        required: false
+        displayName: merchant_info
+        type: Merchant
+      deposit_account_name:
+        required: false
+        displayName: deposit_account_name
+        description: Source account name for payments or advances on LN accounts
+        type: string
+      deposit_account_number:
+        required: false
+        displayName: deposit_account_number
+        description: Last four digits of account for payments or advances on LN accounts
+        type: string
+      trade_date:
+        required: false
+        displayName: trade_date
+        description: Datetime of trade for INVMT or TRST1 accounts
+        type: datetime
+      settlement_date:
+        required: false
+        displayName: settlement_date
+        description: Date of settlement for INVMT or TRST1 accounts - format (yyyy-mm-dd)
+        type: string
+  Merchant:
+    displayName: Merchant
+    type: object
+    properties:
+      name:
+        required: false
+        displayName: name
+        description: Merchant name
+        type: string
+      city:
+        required: false
+        displayName: city
+        description: Merchant city
+        type: string
+      state_prov:
+        required: false
+        displayName: state_prov
+        description: Merchant state or province
+        type: string
+      country:
+        required: false
+        displayName: country
+        description: Merchant country
+        type: string
+      phone:
+        required: false
+        displayName: phone
+        description: Merchant phone number
+        type: string
+      zip_postal:
+        required: false
+        displayName: zip_postal
+        description: Merchant zip code or postal code
+        type: string
+  AccountPreferences:
+    displayName: AccountPreferences
+    type: object
+    properties:
+      number:
+        required: true
+        displayName: number
+        description: decrypted account ID
+        type: string
+      display:
+        required: true
+        displayName: display
+        description: hide/show indicator
+        type: boolean
+  ErrorResponse:
+    displayName: ErrorResponse
+    type: object
+    properties:
+      error_code:
+        required: true
+        displayName: error_code
+        description: Error code
+        type: string
+      error_message:
+        required: true
+        displayName: error_message
+        description: Error message
+        type: string
+/summary:
+  get:
+    displayName: getAccountSummaryUsingGET
+    description: Get summary of account information for the current user
+    headers:
+      Authorization:
+        required: true
+        displayName: Authorization
+        description: OAuth2 token
+        type: string
+      User-Agent:
+        required: false
+        displayName: User-Agent
+        description: HTTP USER_AGENT
+        type: string
+      Client-Info:
+        required: false
+        displayName: Client-Info
+        description: Application Name, Platform and Version. e.g. appname=cnb_mobile, platform=ios, version=v1.0
+        type: string
+      x-transaction-id:
+        required: false
+        displayName: x-transaction-id
+        description: Unique transaction ID to provision cross tier traceability.
+        type: string
+    responses:
+      200:
+        description: '0: Success'
+        headers:
+          Content-Type:
+            default: application/json
+            displayName: Content-Type
+            type: string
+        body:
+          application/json:
+            displayName: response
+            description: '0: Success'
+            type: AccountSummaryResponse
+      400:
+        description: '1200: Invalid path parameter'
+        body:
+          application/json:
+            description: '1200: Invalid path parameter'
+            type: ErrorResponse
+      403:
+        description: '1110: Invalid token in Authorization header'
+        body:
+          application/json:
+            description: '1110: Invalid token in Authorization header'
+            type: ErrorResponse
+      500:
+        description: '1000: Unknown exception occurred'
+        body:
+          application/json:
+            description: '1000: Unknown exception occurred'
+            type: ErrorResponse
+      503:
+        description: '1001: In Maintenance mode'
+        body:
+          application/json:
+            description: '1001: In Maintenance mode'
+            type: ErrorResponse
+/{accountId}:
+  uriParameters:
+    accountId:
+      required: true
+      displayName: accountId
+      description: Unique identifier for a given account
+      type: string
+  get:
+    displayName: getAccountDetailsUsingGET
+    description: Depending on the account type and account sub-type, the response will contain different fields.
+    headers:
+      Authorization:
+        required: true
+        displayName: Authorization
+        description: OAuth2 token
+        type: string
+      User-Agent:
+        required: false
+        displayName: User-Agent
+        description: HTTP USER_AGENT
+        type: string
+      Client-Info:
+        required: false
+        displayName: Client-Info
+        description: Application Name, Platform and Version. e.g. appname=cnb_mobile, platform=ios, version=v1.0
+        type: string
+      x-transaction-id:
+        required: false
+        displayName: x-transaction-id
+        description: Unique transaction ID to provision cross tier traceability.
+        type: string
+    responses:
+      200:
+        description: '0: Success'
+        headers:
+          Content-Type:
+            default: application/json
+            displayName: Content-Type
+            type: string
+        body:
+          application/json:
+            displayName: response
+            description: '0: Success'
+            type: ExtendedAccount
+      400:
+        description: '1200: Invalid path parameter'
+        body:
+          application/json:
+            description: '1200: Invalid path parameter'
+            type: ErrorResponse
+      403:
+        description: '1110: Invalid token in Authorization header'
+        body:
+          application/json:
+            description: '1110: Invalid token in Authorization header'
+            type: ErrorResponse
+      500:
+        description: '1000: Unknown exception occurred'
+        body:
+          application/json:
+            description: '1000: Unknown exception occurred'
+            type: ErrorResponse
+      503:
+        description: '1001: In Maintenance mode'
+        body:
+          application/json:
+            description: '1001: In Maintenance mode'
+            type: ErrorResponse
+  /transactions:
+    get:
+      displayName: getTransactionsUsingGET
+      description: |
+        The API will return transactions for a single account up to a server-configured maximum, even if more transactions are available.
+
+        Optional query parameters can be used to filter out transactions; having no filters means the client desires all transactions.
+
+        Note the aforementioned retrieval maximum <b>ALWAYS</b> applies, with or without filters.
+
+        When query filters are specified only the following seach query parameter combinations are allowed and will include ONLY posted transactions, regardless of transactionType parameter:
+
+        &emsp;- dateFrom + dateTo <b>and/or</b>
+
+        &emsp;- amountFrom + amountTo <b>and/or</b>
+
+        &emsp;- searchText
+
+        The system sorts transactions by date in reverse chronological order.
+      queryParameters:
+        transactionType:
+          required: true
+          displayName: transactionType
+          description: Transaction type to return
+          type: string
+          enum:
+          - all
+          - pending
+          - posted
+        accountCategory:
+          required: true
+          displayName: accountCategory
+          description: Category for specific account being queried. DP = Deposits, CC = Credit Card, LN = Lending, INVMT = Brokerage, TRST1 = Trusts & Investments
+          type: string
+          enum:
+          - DP
+          - CC
+          - LN
+          - INVMT
+          - TRST1
+        pageOffset:
+          required: false
+          displayName: pageOffset
+          description: zero-based page offset
+          type: string
+        dateFrom:
+          required: false
+          displayName: dateFrom
+          description: Transaction date from value - format (yyyy-mm-dd). Cannot be greater than yesterday�s date and cannot be greater than dateTo. Required if dateTo is provided.
+          type: string
+        dateTo:
+          required: false
+          displayName: dateTo
+          description: Transaction date to value - format (yyyy-mm-dd). Cannot be greater than yesterday�s date and cannot be lesser than dateFrom. Required if dateFrom is provided.
+          type: string
+        amountFrom:
+          required: false
+          displayName: amountFrom
+          description: Transaction amount from value - format (xxxxxxxxxx.xx). Cannot be greater than amountTo. Required if amountTo is provided.
+          type: string
+        amountTo:
+          required: false
+          displayName: amountTo
+          description: Transaction amount to value - format (xxxxxxxxxx.xx). Cannot be lesser than amountFrom. Required if amountFrom is provided.
+          type: string
+        searchText:
+          required: false
+          displayName: searchText
+          description: Search text applied to the transaction descriptions. Wild card (*) searches are applied at both ends of the search text.
+          type: string
+      headers:
+        Authorization:
+          required: true
+          displayName: Authorization
+          description: OAuth2 token
+          type: string
+        User-Agent:
+          required: false
+          displayName: User-Agent
+          description: HTTP USER_AGENT
+          type: string
+        Client-Info:
+          required: false
+          displayName: Client-Info
+          description: Application Name, Platform and Version. e.g. appname=cnb_mobile, platform=ios, version=v1.0
+          type: string
+        x-transaction-id:
+          required: false
+          displayName: x-transaction-id
+          description: Unique transaction ID to provision cross tier traceability.
+          type: string
+      responses:
+        200:
+          description: '0: Success'
+          headers:
+            Content-Type:
+              default: application/json
+              displayName: Content-Type
+              type: string
+          body:
+            application/json:
+              displayName: response
+              description: '0: Success'
+              type: TransactionsResponse
+        400:
+          description: '1200: Invalid path parameter'
+          body:
+            application/json:
+              description: '1200: Invalid path parameter'
+              type: ErrorResponse
+        403:
+          description: '1110: Invalid token in Authorization header'
+          body:
+            application/json:
+              description: '1110: Invalid token in Authorization header'
+              type: ErrorResponse
+        500:
+          description: '1000: Unknown exception occurred'
+          body:
+            application/json:
+              description: '1000: Unknown exception occurred'
+              type: ErrorResponse
+        503:
+          description: '1001: In Maintenance mode'
+          body:
+            application/json:
+              description: '1001: In Maintenance mode'
+              type: ErrorResponse
+  /nickname:
+    put:
+      displayName: updateAccountNicknameUsingPUT
+      description: Updates the account nickname specified by the user
+      body:
+        application/json:
+          displayName: nickname
+          description: account nickname the user wishes to update to
+          type: UpdateNicknameRequest
+      headers:
+        Authorization:
+          required: true
+          displayName: Authorization
+          description: OAuth2 token
+          type: string
+        User-Agent:
+          required: false
+          displayName: User-Agent
+          description: HTTP USER_AGENT
+          type: string
+        Client-Info:
+          required: false
+          displayName: Client-Info
+          description: Application Name, Platform and Version. e.g. appname=cnb_mobile, platform=ios, version=v1.0
+          type: string
+        x-transaction-id:
+          required: false
+          displayName: x-transaction-id
+          description: Unique transaction ID to provision cross tier traceability.
+          type: string
+      responses:
+        204:
+          description: '0: Success'
+          headers:
+            Content-Type:
+              default: application/json
+              displayName: Content-Type
+              type: string
+        400:
+          description: '1200: Invalid path parameter'
+          body:
+            application/json:
+              description: '1200: Invalid path parameter'
+              type: ErrorResponse
+        401:
+          description: '1106: Authentication failed'
+          body:
+            application/json:
+              description: '1106: Authentication failed'
+              type: ErrorResponse
+        403:
+          description: '1110: Invalid token in authorization header'
+          body:
+            application/json:
+              description: '1110: Invalid token in authorization header'
+              type: ErrorResponse
+        500:
+          description: '1300: System not available-IAM'
+          body:
+            application/json:
+              description: '1300: System not available-IAM'
+              type: ErrorResponse
+        503:
+          description: '1001: In Maintenance mode'
+          body:
+            application/json:
+              description: '1001: In Maintenance mode'
+              type: ErrorResponse
+/preferences:
+  put:
+    displayName: updatePreferencesUsingPUT
+    description: Updates display order and hide/show properties for all accounts
+    body:
+      application/json:
+        displayName: preferences
+        description: list of account preferences grouped by account type
+        type: array
+        items:
+          type: Preferences
+    headers:
+      Authorization:
+        required: true
+        displayName: Authorization
+        description: OAuth2 token
+        type: string
+      User-Agent:
+        required: false
+        displayName: User-Agent
+        description: HTTP USER_AGENT
+        type: string
+      Client-Info:
+        required: false
+        displayName: Client-Info
+        description: Application Name, Platform and Version. e.g. appname=cnb_mobile, platform=ios, version=v1.0
+        type: string
+      x-transaction-id:
+        required: false
+        displayName: x-transaction-id
+        description: Unique transaction ID to provision cross tier traceability.
+        type: string
+    responses:
+      204:
+        description: '0: Success'
+        headers:
+          Content-Type:
+            default: application/json
+            displayName: Content-Type
+            type: string
+      400:
+        description: '1201: Invalid path parameter'
+        body:
+          application/json:
+            description: '1201: Invalid path parameter'
+            type: ErrorResponse
+      403:
+        description: '1110: Invalid token in authorization header'
+        body:
+          application/json:
+            description: '1110: Invalid token in authorization header'
+            type: ErrorResponse
+      500:
+        description: '1300: System not available-IAM'
+        body:
+          application/json:
+            description: '1300: System not available-IAM'
+            type: ErrorResponse
+      503:
+        description: '1001: In Maintenance mode'
+        body:
+          application/json:
+            description: '1001: In Maintenance mode'
+            type: ErrorResponse
